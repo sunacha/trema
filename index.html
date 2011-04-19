@@ -62,12 +62,29 @@
     </p>
 
     <p>
-      Just hit ./build.rb and straight away you have a working Trema
+      Just run build.rb and straight away you have a working Trema
       installation.
       <pre>
 <span style="color: #e3d796;">$</span> cd trema
 <span style="color: #e3d796;">$</span> ./build.rb</pre>
     </p>
+
+
+    <h2>Get Started</h2>
+
+    To start using Trema, cbench is a good entry point.
+    <a href="http://www.openflow.org/wk/index.php/Oflops">cbench</a>
+    is a program for testing OpenFlow controllers by generating
+    packet-in events for new flows. To estimate the performance of
+    Trema sample controller with cbench, run the following command.
+
+      <pre>
+<span style="color: #e3d796;">$</span> ./build.rb cbench</pre>
+
+    More samples including openflow-event dumper, learning-switch
+    controller and routing-switch controller are found in quick-start
+    guide.
+
 
     <h2>Contact</h2>
     <p>
