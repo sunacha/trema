@@ -89,6 +89,7 @@ class Network
     rule = { :port_status => app_name, :packet_in => app_name, :state_notify => app_name }
     sm = SwitchManager.new( rule, @context.port )
     sm.no_flow_cleanup = true
+    sm.command_prefix = ENV[ "SWITCH_COMMAND_PREFIX" ] if ENV.has_key? "SWITCH_COMMAND_PREFIX"
     sm.run!
 
     @context.links.each do | name, each |

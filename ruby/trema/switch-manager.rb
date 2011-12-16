@@ -59,6 +59,18 @@ module Trema
 
 
     #
+    # Add a prefix to the switch manager command, with a trailing
+    # space if seperation is required
+    #
+    # @example
+    #   switch_manager.command_prefix = "valgrind -q --tool=memcheck --leak-check=yes --trace-children=yes --log-socket=127.0.0.1:12345 "
+    #
+    # @return [String]
+    #
+    attr_accessor :command_prefix
+
+
+    #
     # Creates a switch manager controller
     #
     # @example
@@ -71,6 +83,7 @@ module Trema
       @rule = rule
       @port = port
       @no_flow_cleanup = false
+      @command_prefix = ""
       SwitchManager.add self
     end
 
@@ -94,7 +107,7 @@ module Trema
 
 
     def command
-      "#{ Executables.switch_manager } #{ options.join " " } -- #{ switch_options.join " " }"
+      "#{ command_prefix }#{ Executables.switch_manager } #{ options.join " " } -- #{ switch_options.join " " }"
     end
 
 
