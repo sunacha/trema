@@ -25,7 +25,6 @@
 #include "event_connection.h"
 #include "event_timer.h"
 #include "event_handler.h"
-#include "default_event_handler.h"
 #include "features-reply.h"
 #include "features-request.h"
 #include "set-config.h"
@@ -96,7 +95,6 @@ Init_trema() {
   Init_event_connection();
   Init_event_timer();
   Init_event_handler();
-  Init_default_event_handler();
   Init_controller();
   Init_features_reply();
   Init_features_request();
