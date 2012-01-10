@@ -149,6 +149,7 @@ struct listener_info listener_info;
 static struct option long_options[] = {
   { "port", 1, NULL, 'p' },
   { "switch", 1, NULL, 's' },
+  { "unix", 1, NULL, 'u' },
   { NULL, 0, NULL, 0  },
 };
 
@@ -164,6 +165,7 @@ usage() {
 	 "  -s, --switch=PATH           the command path of switch\n"
 	 "  -n, --name=SERVICE_NAME     service name\n"
          "  -p, --port=PORT             server listen port (default %u)\n"
+         "  -u, --unix=PATH             server listen unix socket\n"
 	 "  -d, --daemonize             run in the background\n"
 	 "  -l, --logging_level=LEVEL   set logging level\n"
 	 "  -h, --help                  display this help and exit\n"
@@ -253,8 +255,9 @@ static void
 init_listener_info( struct listener_info *listener_info ) {
   memset( listener_info, 0, sizeof( struct listener_info ) );
   listener_info->switch_daemon = xconcatenate_path( get_trema_home(), SWITCH_MANAGER_PATH );
-  listener_info->listen_port = OFP_TCP_PORT;
   listener_info->listen_fd = -1;
+  listener_info->listen_protocol = LISTENER_INFO_INET;
+  listener_info->listen_port = OFP_TCP_PORT;
 }
 
 
@@ -271,6 +274,13 @@ finalize_listener_info(  struct listener_info *listener_info ) {
     close( listener_info->listen_fd );
     listener_info->listen_fd = -1;
   }
+  if ( listener_info->listen_protocol == LISTENER_INFO_INET &&
+       listener_info->listen_path != NULL ) {
+    xfree( listener_info->listen_path );
+    listener_info->listen_path = NULL;
+  }
+
+  listener_info->listen_protocol = LISTENER_INFO_NONE;
 }
 
 
@@ -295,7 +305,25 @@ parse_argument( struct listener_info *listener_info, int argc, char *argv[] ) {
   while ( ( c = getopt_long( argc, argv, short_options, long_options, NULL ) ) != -1 ) {
     switch ( c ) {
       case 'p':
+        if ( listener_info->listen_protocol != LISTENER_INFO_INET ) {
+          return false;
+        }
+
+        listener_info->listen_protocol = LISTENER_INFO_INET;
         listener_info->listen_port = strtoport( optarg );
+
+        if ( listener_info->listen_port == 0 ) {
+          return false;
+        }
+        break;
+      case 'u':
+        if ( listener_info->listen_protocol != LISTENER_INFO_INET ) {
+          return false;
+        }
+
+        listener_info->listen_protocol = LISTENER_INFO_UNIX;
+        listener_info->listen_path = xstrdup( optarg );
+
         if ( listener_info->listen_port == 0 ) {
           return false;
         }
@@ -422,7 +450,19 @@ main( int argc, char *argv[] ) {
   catch_sigchild();
 
   // listener start (listen socket binding and listen)
-  ret = secure_channel_listen_start( &listener_info );
+  switch ( listener_info.listen_protocol ) {
+  case LISTENER_INFO_INET:
+    ret = secure_channel_listen_inet( &listener_info );
+    break;
+  case LISTENER_INFO_UNIX:
+    debug( "Opening unix socket ( path=%s ).", listener_info.listen_path );
+    ret = secure_channel_listen_unix( &listener_info );
+    break;
+  default:
+    debug( "Unknown listener socket protocol type." );
+    ret = 0;
+  }
+
   if ( !ret ) {
     finalize_listener_info( &listener_info );
     exit( EXIT_FAILURE );
