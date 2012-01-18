@@ -1,7 +1,7 @@
 /*
  * Author: Kazushi SUGYO
  *
- * Copyright (C) 2008-2011 NEC Corporation
+ * Copyright (C) 2008-2012 NEC Corporation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2, as
@@ -183,7 +183,7 @@ secure_channel_write( int fd, void* data ) {
 
 
 static void
-switch_set_timeout( long sec, timer_callback_t callback, void *user_data ) {
+switch_set_timeout( long sec, timer_callback callback, void *user_data ) {
   struct itimerspec interval;
 
   interval.it_value.tv_sec = sec;
@@ -196,7 +196,7 @@ switch_set_timeout( long sec, timer_callback_t callback, void *user_data ) {
 
 
 static void
-switch_unset_timeout( timer_callback_t callback, void *user_data ) {
+switch_unset_timeout( timer_callback callback, void *user_data ) {
   if ( switch_info.running_timer ) {
     switch_info.running_timer = false;
     delete_timer_event( callback, user_data );

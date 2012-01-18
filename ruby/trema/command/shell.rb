@@ -3,7 +3,7 @@
 #
 # Author: Yasuhito Takamiya <yasuhito@gmail.com>
 #
-# Copyright (C) 2008-2011 NEC Corporation
+# Copyright (C) 2008-2012 NEC Corporation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License, version 2, as
@@ -40,14 +40,14 @@ module Trema
         f.print <<EOF
 include Trema::Shell
 ENV[ "TREMA_HOME" ] = Trema.home
-@config = Trema::DSL::Configuration.new
-@context = Trema::DSL::Context.new( @config )
+$config = Trema::DSL::Configuration.new
+$context = Trema::DSL::Context.new( $config )
 EOF
         f.close
         load f.path
         IRB.start
       ensure
-        cleanup @config
+        cleanup $config
       end
     end
   end
