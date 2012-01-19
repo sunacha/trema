@@ -22,7 +22,6 @@
 #include <stdint.h>
 #include <net/ethernet.h>
 #include <netinet/ip.h>
-#include <netinet/igmp.h>
 #include "packet_info.h"
 #include "log.h"
 #include "wrapper.h"
@@ -112,8 +111,10 @@ parse_ether( buffer *buf ) {
     packet_info->format |= ETH_DIX;
   }
 
-  if ( REMAINED_BUFFER_LENGTH( buf, ptr ) > 0 ) {
+  size_t payload_length = REMAINED_BUFFER_LENGTH( buf, ptr );
+  if ( payload_length > 0 ) {
     packet_info->l2_payload = ptr;
+    packet_info->l2_payload_length = payload_length;
   }
 
   return;
@@ -189,8 +190,10 @@ parse_ipv4( buffer *buf ) {
   packet_info->ipv4_daddr = ntohl( ipv4_header->daddr );
 
   ptr = ( char * ) ipv4_header + packet_info->ipv4_ihl * 4;
-  if ( REMAINED_BUFFER_LENGTH( buf, ptr ) > 0 ) {
+  size_t payload_length = REMAINED_BUFFER_LENGTH( buf, ptr );
+  if ( payload_length > 0 ) {
     packet_info->l3_payload = ptr;
+    packet_info->l3_payload_length = payload_length;
   }
 
   packet_info->format |= NW_IPV4;
@@ -250,8 +253,10 @@ parse_icmp( buffer *buf ) {
   }
 
   ptr = ( void * ) ( icmp_header + 1 );
-  if ( REMAINED_BUFFER_LENGTH( buf, ptr ) > 0 ) {
+  size_t payload_length = REMAINED_BUFFER_LENGTH( buf, ptr );
+  if ( payload_length > 0 ) {
     packet_info->l4_payload = ptr;
+    packet_info->l4_payload_length = payload_length;
   }
 
   packet_info->format |= NW_ICMPV4;
@@ -282,8 +287,10 @@ parse_udp( buffer *buf ) {
   packet_info->udp_checksum = ntohs( udp_header->csum );
 
   ptr = ( void * ) ( udp_header + 1 );
-  if ( REMAINED_BUFFER_LENGTH( buf, ptr ) > 0 ) {
+  size_t payload_length = REMAINED_BUFFER_LENGTH( buf, ptr );
+  if ( payload_length > 0 ) {
     packet_info->l4_payload = ptr;
+    packet_info->l4_payload_length = payload_length;
   }
 
   packet_info->format |= TP_UDP;
@@ -327,8 +334,10 @@ parse_tcp( buffer *buf ) {
   packet_info->tcp_urgent = ntohs( tcp_header->urgent );
 
   ptr = ( char * ) tcp_header + packet_info->tcp_offset * 4;
-  if ( REMAINED_BUFFER_LENGTH( buf, ptr ) > 0 ) {
+  size_t payload_length = REMAINED_BUFFER_LENGTH( buf, ptr );
+  if ( payload_length > 0 ) {
     packet_info->l4_payload = ptr;
+    packet_info->l4_payload_length = payload_length;
   }
 
   packet_info->format |= TP_TCP;
@@ -348,16 +357,15 @@ parse_igmp( buffer *buf ) {
 
   // Check the length of remained buffer
   size_t length = REMAINED_BUFFER_LENGTH( buf, ptr );
-  if ( length < IGMP_MINLEN ) {
+  if ( length < sizeof( igmp_header_t ) ) {
     return;
   }
 
-  struct igmp *igmp = ptr;
-  packet_info->igmp_type = igmp->igmp_type;
-  packet_info->igmp_code = igmp->igmp_code;
-  packet_info->igmp_code = igmp->igmp_code;
-  packet_info->igmp_cksum = ntohs( igmp->igmp_cksum );
-  packet_info->igmp_group = ntohl( igmp->igmp_group.s_addr );
+  igmp_header_t *igmp = ptr;
+  packet_info->igmp_type = igmp->type;
+  packet_info->igmp_code = igmp->code;
+  packet_info->igmp_cksum = ntohs( igmp->csum );
+  packet_info->igmp_group = ntohl( igmp->group );
 
   packet_info->format |= NW_IGMP;
 
