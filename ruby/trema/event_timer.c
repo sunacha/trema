@@ -77,7 +77,7 @@ event_timer_set_handle( VALUE self, VALUE handle ) {
 }
 
 VALUE
-create_event_timer( struct itimerspec *interval, timer_callback_t callback, void* user_data ) {
+create_event_timer( struct itimerspec *interval, timer_callback callback, void* user_data ) {
   VALUE event_timer = rb_funcall( rb_eval_string( "Trema::EventTimer" ), rb_intern( "new" ), 0 );
 
   struct event_timer* data;

@@ -278,21 +278,21 @@ call_finalize_timer() {
 
 
 static bool
-call_add_timer_event( struct itimerspec *interval, timer_callback_t callback, void *user_data ) {
+call_add_timer_event( struct itimerspec *interval, timer_callback callback, void *user_data ) {
   VALUE timer_event = create_event_timer( interval, callback, user_data );
   return CALL_RB_FUNC( "add_timer_event_callback", 1, timer_event ) == Qtrue;
 }
 
 
 static bool
-call_add_periodic_event( const time_t seconds, timer_callback_t callback, void *user_data ) {
+call_add_periodic_event( const time_t seconds, timer_callback callback, void *user_data ) {
   VALUE timer_event = create_event_timer( NULL, callback, user_data );
   return CALL_RB_FUNC( "add_periodic_event_callback", 2, rb_float_new( (double)seconds ), timer_event ) == Qtrue;
 }
 
 
 static bool
-call_delete_timer_event( timer_callback_t callback, void *user_data ) {
+call_delete_timer_event( timer_callback callback, void *user_data ) {
   VALUE timer_event = create_event_timer( NULL, callback, user_data );
 
   CALL_RB_FUNC( "delete_timer_event", 1, timer_event );

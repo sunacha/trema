@@ -33,14 +33,14 @@ extern VALUE cEventTimer;
 
 typedef struct event_timer {
   struct itimerspec interval; // Don't include this here?
-  timer_callback_t callback;
+  timer_callback callback;
   void *user_data;
 } event_timer;
 
 
 void Init_event_timer( void );
 
-VALUE create_event_timer( struct itimerspec *interval, timer_callback_t callback, void* user_data );
+VALUE create_event_timer( struct itimerspec *interval, timer_callback callback, void* user_data );
 
 
 #endif // RUBY_TREMA_EVENT_TIMER_H
