@@ -28,6 +28,8 @@ extern VALUE mTrema;
 VALUE cPacketIn;
 VALUE mPacketInARP;
 VALUE mPacketInIPv4;
+VALUE mPacketInICMPv4;
+VALUE mPacketInIGMP;
 VALUE mPacketInTCP;
 VALUE mPacketInUDP;
 
@@ -139,7 +141,7 @@ packet_in_is_buffered( VALUE self ) {
  */
 static VALUE
 packet_in_in_port( VALUE self ) {
-  return INT2NUM( get_packet_in( self )->in_port );
+  return UINT2NUM( get_packet_in( self )->in_port );
 }
 
 
@@ -150,7 +152,7 @@ packet_in_in_port( VALUE self ) {
  */
 static VALUE
 packet_in_total_len( VALUE self ) {
-  return INT2NUM( get_packet_in( self )->total_len );
+  return UINT2NUM( get_packet_in( self )->total_len );
 }
 
 
@@ -174,7 +176,7 @@ packet_in_data( VALUE self ) {
  */
 static VALUE
 packet_in_reason( VALUE self ) {
-  return INT2NUM( get_packet_in( self )->reason );
+  return UINT2NUM( ( unsigned int ) get_packet_in( self )->reason );
 }
 
 
@@ -201,6 +203,17 @@ packet_in_macda( VALUE self ) {
 
 
 /*
+ * The ethernet type.
+ *
+ * @return [integer] eth_type The ehternet type.
+ */
+static VALUE
+packet_in_eth_type( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->eth_type );
+}
+
+
+/*
  * Is an ARP packet?
  *
  * @return [bool] arp? Is an ARP packet?
@@ -223,7 +236,7 @@ packet_in_is_arp( VALUE self ) {
  */
 static VALUE
 packet_in_arp_oper( VALUE self ) {
-  return get_packet_in_info( self )->arp_ar_op;
+  return UINT2NUM( ( unsigned int ) get_packet_in_info( self )->arp_ar_op );
 }
 
 
@@ -288,6 +301,105 @@ packet_in_is_ipv4( VALUE self ) {
 
 
 /*
+ * The IPv4 version number.
+ *
+ * @return [Integer] ipv4_version The IPv4 version number.
+ */
+static VALUE
+packet_in_ipv4_version( VALUE self ) {
+  return UINT2NUM( ( unsigned int ) get_packet_in_info( self )->ipv4_version );
+}
+
+
+/*
+ * The IPv4 internet header length.
+ *
+ * @return [Integer] ipv4_ihl The IPv4 internet header length.
+ */
+static VALUE
+packet_in_ipv4_ihl( VALUE self ) {
+  return UINT2NUM( ( unsigned int ) get_packet_in_info( self )->ipv4_ihl );
+}
+
+
+/*
+ * The IPv4 tos value.
+ *
+ * @return [Integer] ipv4_tos The IPv4 tos value.
+ */
+static VALUE
+packet_in_ipv4_tos( VALUE self ) {
+  return UINT2NUM( ( unsigned int ) get_packet_in_info( self )->ipv4_tos );
+}
+
+
+/*
+ * The IPv4 total length.
+ *
+ * @return [Integer] ipv4_tot_len The IPv4 total length.
+ */
+static VALUE
+packet_in_ipv4_tot_len( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->ipv4_tot_len );
+}
+
+
+/*
+ * The IPv4 identifier.
+ *
+ * @return [Integer] ipv4_id The IPv4 identifier.
+ */
+static VALUE
+packet_in_ipv4_id( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->ipv4_id );
+}
+
+
+/*
+ * The IPv4 fragment offset.
+ *
+ * @return [Integer] ipv4_frag_off The IPv4 fragment offset.
+ */
+static VALUE
+packet_in_ipv4_frag_off( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->ipv4_frag_off );
+}
+
+
+/*
+ * The IPv4 ttl value.
+ *
+ * @return [Integer] ipv4_ttl The IPv4 ttl value.
+ */
+static VALUE
+packet_in_ipv4_ttl( VALUE self ) {
+  return UINT2NUM( ( unsigned int ) get_packet_in_info( self )->ipv4_ttl );
+}
+
+
+/*
+ * The IPv4 protocol number.
+ *
+ * @return [Integer] ipv4_protocol The IPv4 protocol number.
+ */
+static VALUE
+packet_in_ipv4_protocol( VALUE self ) {
+  return UINT2NUM( ( unsigned int ) get_packet_in_info( self )->ipv4_protocol );
+}
+
+
+/*
+ * The IPv4 checksum.
+ *
+ * @return [Integer] ipv4_checksum The IPv4 checksum.
+ */
+static VALUE
+packet_in_ipv4_checksum( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->ipv4_checksum );
+}
+
+
+/*
  * The IPV4 source protocol address.
  *
  * @return [Trema::IP] ipv4_saddr IP protocol address.
@@ -306,6 +418,206 @@ packet_in_ipv4_saddr( VALUE self ) {
 static VALUE
 packet_in_ipv4_daddr( VALUE self ) {
   PACKET_IN_RETURN_IP( ipv4_daddr );
+}
+
+
+/*
+ * Is an ICMPv4 packet?
+ *
+ * @return [bool] icmpv4? Is an ICMPv4 packet?
+ */
+static VALUE
+packet_in_is_icmpv4( VALUE self ) {
+  if ( ( get_packet_in_info( self )->format & NW_ICMPV4 ) ) {
+    return Qtrue;
+  }
+  else {
+    return Qfalse;
+  }
+}
+
+
+/*
+ * The ICMPv4 message type.
+ *
+ * @return [Integer] icmpv4_type The ICMPv4 message type.
+ */
+static VALUE
+packet_in_icmpv4_type( VALUE self ) {
+  return UINT2NUM( ( unsigned int ) get_packet_in_info( self )->icmpv4_type );
+}
+
+
+/*
+ * The ICMPv4 message code.
+ *
+ * @return [Integer] icmpv4_code The ICMPv4 message code.
+ */
+static VALUE
+packet_in_icmpv4_code( VALUE self ) {
+  return UINT2NUM( ( unsigned int ) get_packet_in_info( self )->icmpv4_code );
+}
+
+
+/*
+ * The ICMPv4 message checksum.
+ *
+ * @return [Integer] icmpv4_checksum The ICMPv4 message checksum.
+ */
+static VALUE
+packet_in_icmpv4_checksum( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->icmpv4_checksum );
+}
+
+
+/*
+ * The identifier of ICMPv4 echo.
+ *
+ * @return [Integer] icmpv4_id The identifier of ICMPv4 echo.
+ */
+static VALUE
+packet_in_icmpv4_id( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->icmpv4_id );
+}
+
+
+/*
+ * The sequence number of ICMPv4 echo.
+ *
+ * @return [Integer] icmpv4_id The sequence number of ICMPv4 echo.
+ */
+static VALUE
+packet_in_icmpv4_seq( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->icmpv4_seq );
+}
+
+
+/*
+ * The gateway address of ICMPv4 redicect.
+ *
+ * @return [Trema::IP] icmp_gateway The gateway address of ICMPv4 redicect.
+ */
+static VALUE
+packet_in_icmpv4_gateway( VALUE self ) {
+  PACKET_IN_RETURN_IP( icmpv4_gateway );
+}
+
+
+/*
+ * Is an IGMP packet?
+ *
+ * @return [bool] igmp? Is an IGMP packet?
+ */
+static VALUE
+packet_in_is_igmp( VALUE self ) {
+  if ( ( get_packet_in_info( self )->format & NW_IGMP ) ) {
+    return Qtrue;
+  }
+  else {
+    return Qfalse;
+  }
+}
+
+
+/*
+ * Is an IGMP membership query packet?
+ *
+ * @return [bool] igmp_membership_query? Is an IGMP membership query packet?
+ */
+static VALUE
+packet_in_is_igmp_membership_query( VALUE self ) {
+  if ( packet_type_igmp_membership_query( get_packet_in( self )->data ) ) {
+    return Qtrue;
+  }
+  else {
+    return Qfalse;
+  }
+}
+
+
+/*
+ * Is an IGMP v1 membership report packet?
+ *
+ * @return [bool] igmp_v1_membership_report? Is an IGMP v1 membership report packet?
+ */
+static VALUE
+packet_in_is_igmp_v1_membership_report( VALUE self ) {
+  if ( packet_type_igmp_v1_membership_report( get_packet_in( self )->data ) ) {
+    return Qtrue;
+  }
+  else {
+    return Qfalse;
+  }
+}
+
+
+/*
+ * Is an IGMP v2 membership report packet?
+ *
+ * @return [bool] igmp_v2_membership_report? Is an IGMP v2 membership report packet?
+ */
+static VALUE
+packet_in_is_igmp_v2_membership_report( VALUE self ) {
+  if ( packet_type_igmp_v2_membership_report( get_packet_in( self )->data ) ) {
+    return Qtrue;
+  }
+  else {
+    return Qfalse;
+  }
+}
+
+
+/*
+ * Is an IGMP v2 leave group packet?
+ *
+ * @return [bool] igmp_v2_leave_group? Is an IGMP v2 leave group packet?
+ */
+static VALUE
+packet_in_is_igmp_v2_leave_group( VALUE self ) {
+  if ( packet_type_igmp_v2_leave_group( get_packet_in( self )->data ) ) {
+    return Qtrue;
+  }
+  else {
+    return Qfalse;
+  }
+}
+
+
+/*
+ * Is an IGMP v3 membership report packet?
+ *
+ * @return [bool] igmp_v3_membership_report? Is an IGMP v3 membership report packet?
+ */
+static VALUE
+packet_in_is_igmp_v3_membership_report( VALUE self ) {
+  if ( packet_type_igmp_v3_membership_report( get_packet_in( self )->data ) ) {
+    return Qtrue;
+  }
+  else {
+    return Qfalse;
+  }
+}
+
+
+/*
+ * The IGMP message type.
+ *
+ * @return [Integer] igmp_type IGMP type.
+ */
+static VALUE
+packet_in_igmp_type( VALUE self ) {
+  return UINT2NUM( ( unsigned int ) get_packet_in_info( self )->igmp_type );
+}
+
+
+/*
+ * The IGMP group address.
+ *
+ * @return [Trema::IP] igmp_group an IGMP group address.
+ */
+static VALUE
+packet_in_igmp_group( VALUE self ) {
+  PACKET_IN_RETURN_IP( igmp_group );
 }
 
 
@@ -332,7 +644,7 @@ packet_in_is_tcp( VALUE self ) {
  */
 static VALUE
 packet_in_tcp_src_port( VALUE self ) {
-  return ULONG2NUM( get_packet_in_info( self )->tcp_src_port );
+  return UINT2NUM( get_packet_in_info( self )->tcp_src_port );
 }
 
 
@@ -343,7 +655,84 @@ packet_in_tcp_src_port( VALUE self ) {
  */
 static VALUE
 packet_in_tcp_dst_port( VALUE self ) {
-  return ULONG2NUM( get_packet_in_info( self )->tcp_dst_port );
+  return UINT2NUM( get_packet_in_info( self )->tcp_dst_port );
+}
+
+
+/*
+ * The TCP sequence number.
+ *
+ * @return [Integer] tcp_seq_no a TCP sequence number.
+ */
+static VALUE
+packet_in_tcp_seq_no( VALUE self ) {
+  return ULONG2NUM( get_packet_in_info( self )->tcp_seq_no );
+}
+
+
+/*
+ * The TCP acknowledge number.
+ *
+ * @return [Integer] tcp_ack_no a TCP acknowkedge number.
+ */
+static VALUE
+packet_in_tcp_ack_no( VALUE self ) {
+  return ULONG2NUM( get_packet_in_info( self )->tcp_ack_no );
+}
+
+
+/*
+ * The TCP offset.
+ *
+ * @return [Integer] tcp_offset a TCP offset.
+ */
+static VALUE
+packet_in_tcp_offset( VALUE self ) {
+  return UINT2NUM( ( unsigned int ) get_packet_in_info( self )->tcp_offset );
+}
+
+
+/*
+ * The TCP flags.
+ *
+ * @return [Integer] tcp_flags TCP flags.
+ */
+static VALUE
+packet_in_tcp_flags( VALUE self ) {
+  return UINT2NUM( ( unsigned int ) get_packet_in_info( self )->tcp_flags );
+}
+
+
+/*
+ * The TCP window.
+ *
+ * @return [Integer] tcp_window a TCP window.
+ */
+static VALUE
+packet_in_tcp_window( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->tcp_window );
+}
+
+
+/*
+ * The TCP checksum.
+ *
+ * @return [Integer] tcp_checksum a TCP checksum.
+ */
+static VALUE
+packet_in_tcp_checksum( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->tcp_checksum );
+}
+
+
+/*
+ * The TCP urgent.
+ *
+ * @return [Integer] tcp_urgent a TCP urgent.
+ */
+static VALUE
+packet_in_tcp_urgent( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->tcp_urgent );
 }
 
 
@@ -372,7 +761,7 @@ packet_in_is_udp( VALUE self ) {
 static VALUE
 packet_in_udp_payload( VALUE self ) {
   packet_info *cpacket = get_packet_in_info( self );
-  return rb_str_new( cpacket->l4_payload, ( long ) cpacket->udp_len );
+  return rb_str_new( cpacket->l4_payload, ( long ) cpacket->l4_payload_length );
 }
 
 
@@ -383,7 +772,7 @@ packet_in_udp_payload( VALUE self ) {
  */
 static VALUE
 packet_in_udp_src_port( VALUE self ) {
-  return ULONG2NUM( get_packet_in_info( self )->udp_src_port );
+  return UINT2NUM( get_packet_in_info( self )->udp_src_port );
 }
 
 
@@ -394,7 +783,29 @@ packet_in_udp_src_port( VALUE self ) {
  */
 static VALUE
 packet_in_udp_dst_port( VALUE self ) {
-  return ULONG2NUM( get_packet_in_info( self )->udp_dst_port );
+  return UINT2NUM( get_packet_in_info( self )->udp_dst_port );
+}
+
+
+/*
+ * The UDP length.
+ *
+ * @return [Integer] udp_len a UDP length.
+ */
+static VALUE
+packet_in_udp_len( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->udp_len );
+}
+
+
+/*
+ * The UDP checksum.
+ *
+ * @return [Integer] udp_checksum a UDP checksum.
+ */
+static VALUE
+packet_in_udp_checksum( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->udp_checksum );
 }
 
 
@@ -422,9 +833,12 @@ Init_packet_in() {
 
   rb_define_method( cPacketIn, "macsa", packet_in_macsa, 0 );
   rb_define_method( cPacketIn, "macda", packet_in_macda, 0 );
+  rb_define_method( cPacketIn, "eth_type", packet_in_eth_type, 0 );
 
   rb_define_method( cPacketIn, "arp?", packet_in_is_arp, 0 );
   rb_define_method( cPacketIn, "ipv4?", packet_in_is_ipv4, 0 );
+  rb_define_method( cPacketIn, "icmpv4?", packet_in_is_icmpv4, 0 );
+  rb_define_method( cPacketIn, "igmp?", packet_in_is_igmp, 0 );
   rb_define_method( cPacketIn, "tcp?", packet_in_is_tcp, 0 );
   rb_define_method( cPacketIn, "udp?", packet_in_is_udp, 0 );
 
@@ -436,17 +850,52 @@ Init_packet_in() {
   rb_define_method( mPacketInARP, "arp_tpa", packet_in_arp_tpa, 0 );
 
   mPacketInIPv4 = rb_define_module_under( mTrema, "PacketInIPv4" );
+  rb_define_method( mPacketInIPv4, "ipv4_version", packet_in_ipv4_version, 0 );
+  rb_define_method( mPacketInIPv4, "ipv4_ihl", packet_in_ipv4_ihl, 0 );
+  rb_define_method( mPacketInIPv4, "ipv4_tos", packet_in_ipv4_tos, 0 );
+  rb_define_method( mPacketInIPv4, "ipv4_tot_len", packet_in_ipv4_tot_len, 0 );
+  rb_define_method( mPacketInIPv4, "ipv4_id", packet_in_ipv4_id, 0 );
+  rb_define_method( mPacketInIPv4, "ipv4_frag_off", packet_in_ipv4_frag_off, 0 );
+  rb_define_method( mPacketInIPv4, "ipv4_ttl", packet_in_ipv4_ttl, 0 );
+  rb_define_method( mPacketInIPv4, "ipv4_protocol", packet_in_ipv4_protocol, 0 );
+  rb_define_method( mPacketInIPv4, "ipv4_checksum", packet_in_ipv4_checksum, 0 );
   rb_define_method( mPacketInIPv4, "ipv4_saddr", packet_in_ipv4_saddr, 0 );
   rb_define_method( mPacketInIPv4, "ipv4_daddr", packet_in_ipv4_daddr, 0 );
+
+  mPacketInICMPv4 = rb_define_module_under( mTrema, "PacketInICMPv4" );
+  rb_define_method( mPacketInICMPv4, "icmpv4_type", packet_in_icmpv4_type, 0 );
+  rb_define_method( mPacketInICMPv4, "icmpv4_code", packet_in_icmpv4_code, 0 );
+  rb_define_method( mPacketInICMPv4, "icmpv4_checksum", packet_in_icmpv4_checksum, 0 );
+  rb_define_method( mPacketInICMPv4, "icmpv4_id", packet_in_icmpv4_id, 0 );
+  rb_define_method( mPacketInICMPv4, "icmpv4_seq", packet_in_icmpv4_seq, 0 );
+  rb_define_method( mPacketInICMPv4, "icmpv4_group", packet_in_icmpv4_gateway, 0 );  
+
+  mPacketInIGMP = rb_define_module_under( mTrema, "PacketInIGMP" );
+  rb_define_method( mPacketInIGMP, "igmp_type", packet_in_igmp_type, 0 );
+  rb_define_method( mPacketInIGMP, "igmp_group", packet_in_igmp_group, 0 );
+  rb_define_method( mPacketInIGMP, "igmp_membership_query?", packet_in_is_igmp_membership_query, 0 );
+  rb_define_method( mPacketInIGMP, "igmp_v1_membership_report?", packet_in_is_igmp_v1_membership_report, 0 );
+  rb_define_method( mPacketInIGMP, "igmp_v2_membership_report?", packet_in_is_igmp_v2_membership_report, 0 );
+  rb_define_method( mPacketInIGMP, "igmp_v2_leave_group?", packet_in_is_igmp_v2_leave_group, 0 );
+  rb_define_method( mPacketInIGMP, "igmp_v3_membership_report?", packet_in_is_igmp_v3_membership_report, 0 );
 
   mPacketInTCP = rb_define_module_under( mTrema, "PacketInTCP" );
   rb_define_method( mPacketInTCP, "tcp_src_port", packet_in_tcp_src_port, 0 );
   rb_define_method( mPacketInTCP, "tcp_dst_port", packet_in_tcp_dst_port, 0 );
+  rb_define_method( mPacketInTCP, "tcp_seq_no", packet_in_tcp_seq_no, 0 );
+  rb_define_method( mPacketInTCP, "tcp_ack_no", packet_in_tcp_ack_no, 0 );
+  rb_define_method( mPacketInTCP, "tcp_offset", packet_in_tcp_offset, 0 );
+  rb_define_method( mPacketInTCP, "tcp_flags", packet_in_tcp_flags, 0 );
+  rb_define_method( mPacketInTCP, "tcp_window", packet_in_tcp_window, 0 );
+  rb_define_method( mPacketInTCP, "tcp_checksum", packet_in_tcp_checksum, 0 );
+  rb_define_method( mPacketInTCP, "tcp_urgent", packet_in_tcp_urgent, 0 );
 
   mPacketInUDP = rb_define_module_under( mTrema, "PacketInUDP" );
   rb_define_method( mPacketInUDP, "udp_payload", packet_in_udp_payload, 0 );
   rb_define_method( mPacketInUDP, "udp_src_port", packet_in_udp_src_port, 0 );
   rb_define_method( mPacketInUDP, "udp_dst_port", packet_in_udp_dst_port, 0 );
+  rb_define_method( mPacketInUDP, "udp_checksum", packet_in_udp_checksum, 0 );
+  rb_define_method( mPacketInUDP, "udp_len", packet_in_udp_len, 0 );
 }
 
 
@@ -473,6 +922,14 @@ handle_packet_in( uint64_t datapath_id, packet_in message ) {
 
   if ( ( info->format & NW_IPV4 ) ) {
     rb_funcall( cPacketIn, rb_intern( "include" ), 1, mPacketInIPv4 );
+  }
+
+  if ( ( info->format & NW_ICMPV4 ) ) {
+    rb_funcall( cPacketIn, rb_intern( "include" ), 1, mPacketInICMPv4 );
+  }
+
+  if ( ( info->format & NW_IGMP ) ) {
+    rb_funcall( cPacketIn, rb_intern( "include" ), 1, mPacketInIGMP );
   }
 
   if ( ( info->format & TP_TCP ) ) {

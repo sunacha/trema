@@ -18,6 +18,16 @@
 #
 
 
+require "bundler"
+begin
+  Bundler.setup :default, :development
+rescue Bundler::BundlerError => e
+  $stderr.puts e.message
+  $stderr.puts "Run `bundle install` to install missing gems"
+  exit e.status_code
+end
+
+
 $LOAD_PATH.unshift( File.expand_path( File.dirname( __FILE__ ) + "/../../ruby" ) )
 
 
@@ -38,13 +48,13 @@ end
 
 
 def cucumber_log name
-  File.join Trema.log_directory, name
+  File.join Trema.log, name
 end
 
 
 def new_tmp_log
-  system "rm #{ Trema.log_directory }/tmp.*" # cleanup
-  `mktemp --tmpdir=#{ Trema.log_directory }`.chomp  
+  system "rm #{ Trema.log }/tmp.*" # cleanup
+  `mktemp --tmpdir=#{ Trema.log }`.chomp  
 end
 
 

@@ -24,13 +24,21 @@
 #define MESSAGE_QUEUE_H
 
 
-#include "trema.h"
+#include "bool.h"
+#include "buffer.h"
+
+
+typedef struct message_queue_element {
+  buffer *data;
+  struct message_queue_element *next;
+} message_queue_element;
 
 
 typedef struct {
-  list_element *head;
-  list_element *tail;
-  int length;
+  message_queue_element *head;
+  message_queue_element *divider;
+  message_queue_element *tail;
+  unsigned int length;
 } message_queue;
 
 
@@ -39,6 +47,7 @@ bool delete_message_queue( message_queue *queue );
 bool enqueue_message( message_queue *queue, buffer *message );
 buffer *dequeue_message( message_queue *queue );
 buffer *peek_message( message_queue *queue );
+void foreach_message_queue( message_queue *queue, void function( buffer *message, void *user_data ), void *user_data );
 
 
 #endif // MESSAGE_QUEUE_H

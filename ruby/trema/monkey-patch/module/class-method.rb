@@ -1,6 +1,3 @@
-#! /usr/bin/env ruby
-#
-# Trema demo
 #
 # Author: Yasuhito Takamiya <yasuhito@gmail.com>
 #
@@ -21,16 +18,23 @@
 #
 
 
-require "fileutils"
-
-
-FileUtils.cd File.dirname( __FILE__ ) do
-  system "./build.rb cbench"
+module MonkeyPatch
+  module Module
+    module ClassMethod
+      def define_class_method name, &block
+        self.extend ::Module.new {
+          define_method name.to_s do
+            block.call
+          end
+        }
+      end
+    end
+  end
 end
 
 
 ### Local variables:
 ### mode: Ruby
-### coding: utf-8
+### coding: utf-8-unix
 ### indent-tabs-mode: nil
 ### End:

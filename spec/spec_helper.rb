@@ -18,7 +18,8 @@
 #
 
 
-$LOAD_PATH << File.join( File.dirname( __FILE__ ), "/../ruby" )
+$LOAD_PATH << File.join( File.dirname( __FILE__ ), "..", "ruby" )
+$LOAD_PATH.unshift File.expand_path( File.join File.dirname( __FILE__ ), "..", "vendor", "ruby-ifconfig-1.2", "lib" )
 
 
 require "rubygems"
@@ -30,8 +31,12 @@ require "trema/dsl/context"
 require "trema/ofctl"
 require "trema/shell"
 require "trema/util"
-Dir.glob( File.join( File.dirname( __FILE__ ), '*_supportspec.rb' ) ).each do | file |
-  require File.basename( file, File.extname( file ) )
+
+
+# Requires supporting files with custom matchers and macros, etc,
+# in ./support/ and its subdirectories.
+Dir[ "#{ File.dirname( __FILE__ ) }/support/**/*.rb" ].each do | each |
+  require File.expand_path( each )
 end
 
 

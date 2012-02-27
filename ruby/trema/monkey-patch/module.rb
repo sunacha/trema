@@ -18,10 +18,12 @@
 #
 
 
+require "trema/monkey-patch/module/class-method"
 require "trema/monkey-patch/module/deprecation"
 
 
 class Module
+  include MonkeyPatch::Module::ClassMethod
   include MonkeyPatch::Module::Deprecation
 end
 

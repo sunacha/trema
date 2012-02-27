@@ -26,7 +26,7 @@
 # threshold.
 #
 
-$coverage_threshold = 73.7
+$coverage_threshold = 74.2
 
 
 ################################################################################
@@ -329,7 +329,7 @@ end
 def run_acceptance_test
   test "Running acceptance tests ..." do
     sh "./build.rb"
-    sh "rake cucumber"
+    sh "rake features"
   end
 end
 
@@ -366,9 +366,9 @@ def init_cruise
   $start_time = Time.now
   sh "./build.rb distclean"
   sh "bundle install"
-  mkdir_p Trema.log_directory
-  mkdir_p Trema.pid_directory
-  mkdir_p Trema.sock_directory
+  mkdir_p Trema.log
+  mkdir_p Trema.pid
+  mkdir_p Trema.sock
 end
 
 
