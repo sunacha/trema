@@ -19,8 +19,8 @@
 
 
 #include <string.h>
-#include "trema.h"
 #include "ruby.h"
+#include "trema.h"
 #include "port.h"
 
 
