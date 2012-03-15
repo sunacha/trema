@@ -21,7 +21,7 @@
 #
 
 
-result = system "cd #{ File.dirname( __FILE__ ) } && ruby .mono.rant #{ ARGV.join ' ' }"
+result = system "cd #{ File.dirname( __FILE__ ) } && rant #{ ARGV.join ' ' }"
 abort "#{ $0 } aborted!" unless result;
 
 

@@ -306,7 +306,7 @@ end
 def test message
   puts message
   cd Trema.home do
-    sh "rant clean"
+    sh "./build.rb clean"
     begin
       yield
     ensure
@@ -318,8 +318,8 @@ end
 
 def run_unit_test
   test "Running unit tests ..." do
-    sh "rant unittests"
-    sh "rant"
+    sh "./build.rb unittests"
+    sh "./build.rb"
     sh "rake spec"
   end
   measure_coverage
@@ -328,8 +328,7 @@ end
 
 def run_acceptance_test
   test "Running acceptance tests ..." do
-    sh "rant"
-    sh "rant"
+    sh "./build.rb"
     sh "rake features"
   end
 end
@@ -365,7 +364,7 @@ $options.parse! ARGV
 
 def init_cruise
   $start_time = Time.now
-  sh "rant distclean"
+  sh "./build.rb distclean"
   sh "bundle install"
   mkdir_p Trema.log
   mkdir_p Trema.pid
