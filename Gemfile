@@ -1,4 +1,7 @@
 source "http://rubygems.org"
+
+gemspec
+
 # Add dependencies required to use your gem here.
 # Example:
 #   gem "activesupport", ">= 2.3.5"
@@ -6,13 +9,13 @@ source "http://rubygems.org"
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
 group :development do
-  gem "bundler", "~> 1.0.0"
+  gem "bundler", "~> 1.1.0"
   gem "cucumber", "~> 1.1.9"
   gem "flay", "~> 1.4.3"
   gem "flog", "~> 2.5.3"
-  gem "jeweler", "~> 1.8.3"
   gem "rake", "~> 0.9.2.2"
-  gem "rcov", "~> 1.0.0"
+#  gem "rcov", "~> 1.0.0"
+  gem "simplecov"
   gem "rdoc", "~> 3.12"
   gem "redcarpet", "~> 2.1.0"
   gem "reek", "~> 1.2.8"

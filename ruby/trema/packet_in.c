@@ -26,6 +26,7 @@
 
 extern VALUE mTrema;
 VALUE cPacketIn;
+VALUE mPacketInVTAG;
 VALUE mPacketInARP;
 VALUE mPacketInIPv4;
 VALUE mPacketInICMPv4;
@@ -210,6 +211,77 @@ packet_in_macda( VALUE self ) {
 static VALUE
 packet_in_eth_type( VALUE self ) {
   return UINT2NUM( get_packet_in_info( self )->eth_type );
+}
+
+
+/*
+ * Is a packet with VLAN tag?
+ *
+ * @return [bool] vtag? Is a packet with VLAN tag?
+ */
+static VALUE
+packet_in_is_vtag( VALUE self ) {
+  if ( ( get_packet_in_info( self )->format & ETH_8021Q ) ) {
+    return Qtrue;
+  }
+  else {
+    return Qfalse;
+  }
+}
+
+
+/*
+ * The vlan tpid.
+ *
+ * @return [integer] vlan_tpid The vlan tpid
+ */
+static VALUE
+packet_in_vlan_tpid( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->vlan_tpid );
+}
+
+
+/*
+ * The vlan tci.
+ *
+ * @return [integer] vlan_tci The vlan tci
+ */
+static VALUE
+packet_in_vlan_tci( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->vlan_tci );
+}
+
+
+/*
+ * The vlan prio.
+ *
+ * @return [integer] vlan_prio The vlan prio
+ */
+static VALUE
+packet_in_vlan_prio( VALUE self ) {
+  return UINT2NUM( ( unsigned int ) get_packet_in_info( self )->vlan_prio );
+}
+
+
+/*
+ * The vlan cfi.
+ *
+ * @return [integer] vlan_cfi The vlan cfi
+ */
+static VALUE
+packet_in_vlan_cfi( VALUE self ) {
+  return UINT2NUM( ( unsigned int ) get_packet_in_info( self )->vlan_cfi );
+}
+
+
+/*
+ * The vlan vid.
+ *
+ * @return [integer] vlan_vid The vlan vid
+ */
+static VALUE
+packet_in_vlan_vid( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->vlan_vid );
 }
 
 
@@ -622,6 +694,17 @@ packet_in_igmp_group( VALUE self ) {
 
 
 /*
+ * The IGMP checksum.
+ *
+ * @return [Integer] igmp_checksum a IGMP checksum.
+ */
+static VALUE
+packet_in_igmp_checksum( VALUE self ) {
+  return UINT2NUM( get_packet_in_info( self )->igmp_checksum );
+}
+
+
+/*
  * Is a TCP packet?
  *
  * @return [bool] tcp? Is a TCP packet?
@@ -835,12 +918,20 @@ Init_packet_in() {
   rb_define_method( cPacketIn, "macda", packet_in_macda, 0 );
   rb_define_method( cPacketIn, "eth_type", packet_in_eth_type, 0 );
 
+  rb_define_method( cPacketIn, "vtag?", packet_in_is_vtag, 0 );
   rb_define_method( cPacketIn, "arp?", packet_in_is_arp, 0 );
   rb_define_method( cPacketIn, "ipv4?", packet_in_is_ipv4, 0 );
   rb_define_method( cPacketIn, "icmpv4?", packet_in_is_icmpv4, 0 );
   rb_define_method( cPacketIn, "igmp?", packet_in_is_igmp, 0 );
   rb_define_method( cPacketIn, "tcp?", packet_in_is_tcp, 0 );
   rb_define_method( cPacketIn, "udp?", packet_in_is_udp, 0 );
+
+  mPacketInVTAG = rb_define_module_under( mTrema, "PacketInVTAG" );
+  rb_define_method( mPacketInVTAG, "vlan_tpid", packet_in_vlan_tpid, 0 );
+  rb_define_method( mPacketInVTAG, "vlan_tci", packet_in_vlan_tci, 0 );
+  rb_define_method( mPacketInVTAG, "vlan_prio", packet_in_vlan_prio, 0 );
+  rb_define_method( mPacketInVTAG, "vlan_cfi", packet_in_vlan_cfi, 0 );
+  rb_define_method( mPacketInVTAG, "vlan_vid", packet_in_vlan_vid, 0 );
 
   mPacketInARP = rb_define_module_under( mTrema, "PacketInARP" );
   rb_define_method( mPacketInARP, "arp_oper", packet_in_arp_oper, 0 );
@@ -873,6 +964,7 @@ Init_packet_in() {
   mPacketInIGMP = rb_define_module_under( mTrema, "PacketInIGMP" );
   rb_define_method( mPacketInIGMP, "igmp_type", packet_in_igmp_type, 0 );
   rb_define_method( mPacketInIGMP, "igmp_group", packet_in_igmp_group, 0 );
+  rb_define_method( mPacketInIGMP, "igmp_checksum", packet_in_igmp_checksum, 0 );
   rb_define_method( mPacketInIGMP, "igmp_membership_query?", packet_in_is_igmp_membership_query, 0 );
   rb_define_method( mPacketInIGMP, "igmp_v1_membership_report?", packet_in_is_igmp_v1_membership_report, 0 );
   rb_define_method( mPacketInIGMP, "igmp_v2_membership_report?", packet_in_is_igmp_v2_membership_report, 0 );
@@ -915,6 +1007,10 @@ handle_packet_in( uint64_t datapath_id, packet_in message ) {
   memcpy( tmp, &message, sizeof( packet_in ) );
 
   packet_info* info = ( packet_info * ) tmp->data->user_data;
+
+  if ( ( info->format & ETH_8021Q ) ) {
+    rb_funcall( cPacketIn, rb_intern( "include" ), 1, mPacketInVTAG );
+  }
 
   if ( ( info->format & NW_ARP ) ) {
     rb_funcall( cPacketIn, rb_intern( "include" ), 1, mPacketInARP );

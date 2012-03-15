@@ -1,5 +1,5 @@
 #
-# trema killall command.
+# trema up command.
 #
 # Author: Yasuhito Takamiya <yasuhito@gmail.com>
 #
@@ -21,6 +21,7 @@
 
 
 require "optparse"
+require "trema/dsl"
 require "trema/util"
 
 
@@ -29,9 +30,9 @@ module Trema
     include Trema::Util
 
 
-    def killall
+    def up
       options = OptionParser.new
-      options.banner = "Usage: trema killall [OPTIONS ...]"
+      options.banner = "Usage: trema up NAME [OPTIONS ...]"
 
       options.on( "-h", "--help" ) do
         puts options.to_s
@@ -43,7 +44,15 @@ module Trema
 
       options.parse! ARGV
 
-      cleanup_current_session
+      context = Trema::DSL::Context.load_current
+
+      switch = context.switches[ ARGV[ 0 ] ]
+      if switch
+        switch.run
+        return
+      end
+
+      raise "Unknown name: #{ ARGV[ 0 ] }"
     end
   end
 end
