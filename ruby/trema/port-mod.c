@@ -92,10 +92,10 @@ port_mod_init( int argc, VALUE *argv, VALUE self ) {
 
     if ( ( hw_addr = rb_hash_aref( options, ID2SYM( rb_intern( "hw_addr" ) ) ) ) != Qnil ) {
       mac = hw_addr;
-      if ( rb_obj_is_kind_of( hw_addr, rb_cString ) == Qtrue ||
-        rb_obj_is_kind_of( hw_addr, rb_cInteger ) == Qtrue ) {
+      if ( rb_obj_is_kind_of( hw_addr, rb_cString ) ||
+        rb_obj_is_kind_of( hw_addr, rb_cInteger ) ) {
         mac = rb_funcall( rb_eval_string( "Trema::Mac" ), rb_intern( "new" ), 1, hw_addr );
-      } else if ( rb_obj_is_instance_of( hw_addr, rb_eval_string( "Trema::Mac" ) ) == Qfalse ) {
+      } else if ( !rb_obj_is_instance_of( hw_addr, rb_eval_string( "Trema::Mac" ) ) ) {
         rb_raise( rb_eArgError, "hw_addr must be a string or an integer or Mac object" );
       }
       ptr = ( uint8_t* ) dl_addr_short( mac, haddr );

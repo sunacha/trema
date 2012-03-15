@@ -320,7 +320,7 @@ def run_unit_test
   test "Running unit tests ..." do
     sh "./build.rb unittests"
     sh "./build.rb"
-    sh "rake spec"
+    sh "rake spec #{ $rake_spec_opt }"
   end
   measure_coverage
 end
@@ -357,6 +357,11 @@ end
 
 $options.on( "-v", "--verbose" ) do
   $verbose = true
+end
+
+$options.on( "-t", "--trace" ) do
+  $trace = true
+  $rake_spec_opt = "--trace"
 end
 
 $options.parse! ARGV
