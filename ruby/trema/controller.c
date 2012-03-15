@@ -18,6 +18,10 @@
  */
 
 
+#include "ruby.h"
+#include "trema.h"
+
+
 #include "barrier-reply.h"
 #include "buffer.h"
 #include "controller.h"
@@ -31,11 +35,9 @@
 #include "packet_in.h"
 #include "port-status.h"
 #include "queue-get-config-reply.h"
-#include "ruby.h"
 #include "rubysig.h"
 #include "stats-reply.h"
 #include "switch-disconnected.h"
-#include "trema.h"
 #include "vendor.h"
 
 
@@ -441,7 +443,8 @@ controller_send_packet_out( int argc, VALUE *argv, VALUE self ) {
  */
 static VALUE
 controller_run( VALUE self ) {
-  setenv( "TREMA_HOME", STR2CSTR( rb_funcall( mTrema, rb_intern( "home" ), 0 ) ), 1 );
+  VALUE home = rb_funcall( mTrema, rb_intern( "home" ), 0 );
+  setenv( "TREMA_HOME", STR2CSTR( home ), 1 );
 
   VALUE name = rb_funcall( self, rb_intern( "name" ), 0 );
   rb_gv_set( "$PROGRAM_NAME", name );

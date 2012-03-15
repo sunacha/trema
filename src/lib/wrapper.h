@@ -76,6 +76,9 @@ char *xasprintf( const char *format, ... );
 #ifndef RARRAY_PTR
 #define RARRAY_PTR(v) (RARRAY(v)->ptr)
 #endif
+#ifndef STR2CSTR
+#define STR2CSTR(v) (StringValuePtr(v))
+#endif
 #endif
 
 
