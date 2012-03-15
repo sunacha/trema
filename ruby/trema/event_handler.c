@@ -17,12 +17,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "ruby.h"
+#include "trema.h"
 
 #include "event_handler.h"
 #include "event_connection.h"
 #include "event_timer.h"
 #include "timer.h"
-#include "trema.h"
 
 #include "../../src/lib/event_handler.h"
 
