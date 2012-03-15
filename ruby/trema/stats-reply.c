@@ -278,7 +278,7 @@ handle_stats_reply(
   void *user_data
 ) {
   VALUE controller = ( VALUE ) user_data;
-  if ( rb_respond_to( controller, rb_intern( "stats_reply" ) ) == Qfalse ) {
+  if ( !rb_respond_to( controller, rb_intern( "stats_reply" ) ) ) {
     return;
   }
   if ( body == NULL ) {

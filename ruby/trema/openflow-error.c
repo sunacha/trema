@@ -149,7 +149,7 @@ handle_openflow_error(
   void *user_data
 ) {
   VALUE controller = ( VALUE ) user_data;
-  if ( rb_respond_to( controller, rb_intern( "openflow_error" ) ) == Qfalse ) {
+  if ( !rb_respond_to( controller, rb_intern( "openflow_error" ) ) ) {
     return;
   }
   VALUE attributes = rb_hash_new();

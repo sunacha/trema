@@ -157,7 +157,7 @@ handle_queue_get_config_reply(
   void *user_data
 ) {
   VALUE controller = ( VALUE ) user_data;
-  if ( rb_respond_to( controller, rb_intern( "queue_get_config_reply" ) ) == Qfalse ) {
+  if ( !rb_respond_to( controller, rb_intern( "queue_get_config_reply" ) ) ) {
     return;
   }
 

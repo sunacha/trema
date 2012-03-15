@@ -132,7 +132,7 @@ handle_port_status(
   void *user_data
 ) {
   VALUE controller = ( VALUE ) user_data;
-  if ( rb_respond_to( controller, rb_intern( "port_status" ) ) == Qfalse ) {
+  if ( !rb_respond_to( controller, rb_intern( "port_status" ) ) ) {
     return;
   }
   VALUE attributes = rb_hash_new();

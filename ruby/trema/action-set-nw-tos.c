@@ -55,7 +55,7 @@ action_set_nw_tos_init( int argc, VALUE *argv, VALUE self ) {
     Check_Type( options, T_HASH );
     VALUE nw_tos;
     if ( ( nw_tos = rb_hash_aref( options, ID2SYM( rb_intern( "nw_tos" ) ) ) ) != Qnil ) {
-      if ( rb_funcall( nw_tos, rb_intern( "unsigned_8bit?" ), 0 ) == Qfalse ) {
+      if ( !rb_funcall( nw_tos, rb_intern( "unsigned_8bit?" ), 0 ) ) {
         rb_raise( rb_eArgError, "Nw tos must be an unsigned 8-bit integer" );
       }
       rb_iv_set( self, "@nw_tos", nw_tos );
