@@ -68,17 +68,26 @@ char *xasprintf( const char *format, ... );
 // Define Ruby 1.9 compatible wrappers for struct manipulation
 #ifndef RUBY_19
 #ifndef RFLOAT_VALUE
-#define RFLOAT_VALUE(v) (RFLOAT(v)->value)
+#define RFLOAT_VALUE( v ) ( RFLOAT( v )->value )
 #endif
 #ifndef RARRAY_LEN
-#define RARRAY_LEN(v) (RARRAY(v)->len)
+#define RARRAY_LEN( v ) ( RARRAY( v )->len )
 #endif
 #ifndef RARRAY_PTR
-#define RARRAY_PTR(v) (RARRAY(v)->ptr)
+#define RARRAY_PTR( v ) ( RARRAY( v )->ptr )
 #endif
 #ifndef STR2CSTR
-#define STR2CSTR(v) (StringValuePtr(v))
+#define STR2CSTR( v ) ( StringValuePtr( v ) )
 #endif
+
+#define RB_OBJ_IS_KIND_OF( v, t ) ( rb_obj_is_kind_of( v, t ) )
+#define RB_RESPOND_TO( v, t ) ( rb_respond_to( v, t ) )
+
+#else
+
+#define RB_OBJ_IS_KIND_OF( v, t ) ( rb_obj_is_kind_of( v, t ) == Qtrue )
+#define RB_RESPOND_TO( v, t ) ( rb_respond_to( v, t ) == Qtrue )
+
 #endif
 
 

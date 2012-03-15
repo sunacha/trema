@@ -92,8 +92,8 @@ port_mod_init( int argc, VALUE *argv, VALUE self ) {
 
     if ( ( hw_addr = rb_hash_aref( options, ID2SYM( rb_intern( "hw_addr" ) ) ) ) != Qnil ) {
       mac = hw_addr;
-      if ( rb_obj_is_kind_of( hw_addr, rb_cString ) ||
-        rb_obj_is_kind_of( hw_addr, rb_cInteger ) ) {
+      if ( RB_OBJ_IS_KIND_OF( hw_addr, rb_cString ) ||
+        RB_OBJ_IS_KIND_OF( hw_addr, rb_cInteger ) ) {
         mac = rb_funcall( rb_eval_string( "Trema::Mac" ), rb_intern( "new" ), 1, hw_addr );
       } else if ( !rb_obj_is_instance_of( hw_addr, rb_eval_string( "Trema::Mac" ) ) ) {
         rb_raise( rb_eArgError, "hw_addr must be a string or an integer or Mac object" );
