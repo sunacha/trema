@@ -81,11 +81,13 @@ char *xasprintf( const char *format, ... );
 #endif
 
 #define RB_OBJ_IS_KIND_OF( v, t ) ( rb_obj_is_kind_of( v, t ) )
+#define RB_OBJ_IS_INSTANCE_OF( v, t ) ( rb_obj_is_instance_of( v, t ) )
 #define RB_RESPOND_TO( v, t ) ( rb_respond_to( v, t ) )
 
 #else
 
 #define RB_OBJ_IS_KIND_OF( v, t ) ( rb_obj_is_kind_of( v, t ) == Qtrue )
+#define RB_OBJ_IS_INSTANCE_OF( v, t ) ( rb_obj_is_instance_of( v, t ) == Qtrue )
 #define RB_RESPOND_TO( v, t ) ( rb_respond_to( v, t ) == Qtrue )
 
 #endif
