@@ -18,7 +18,6 @@
  */
 
 
-#include "ruby.h"
 #include "action-enqueue.h"
 #include "action-output.h"
 #include "action-set-dl-dst.h"
