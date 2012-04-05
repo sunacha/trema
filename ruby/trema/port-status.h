@@ -18,23 +18,20 @@
  */
 
 
-#include "ruby.h"
-#include "trema.h"
+#include "trema-ruby-utils.h"
 
 
 extern VALUE cPortStatus;
 
 
 void Init_port_status( void );
-
-
 void handle_port_status(
-        uint64_t datapath_id,
-        uint32_t transaction_id,
-        uint8_t reason,
-        struct ofp_phy_port phy_port,
-        void *user_data
-        );
+  uint64_t datapath_id,
+  uint32_t transaction_id,
+  uint8_t reason,
+  struct ofp_phy_port phy_port,
+  void *user_data
+);
 
 
 /*

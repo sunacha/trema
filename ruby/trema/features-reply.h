@@ -1,8 +1,6 @@
 /*
  * Ruby wrapper class of OpenFlow features reply message.
  *
- * Author: Yasuhito Takamiya <yasuhito@gmail.com>
- *
  * Copyright (C) 2008-2012 NEC Corporation
  *
  * This program is free software; you can redistribute it and/or modify
@@ -24,19 +22,14 @@
 #define FEATURES_REPLY_H
 
 
-#include "ruby.h"
-#include "trema.h"
+#include "trema-ruby-utils.h"
 
 
 extern VALUE cFeaturesReply;
 
 
 void Init_features_reply( void );
-
-
 void handle_switch_ready( uint64_t datapath_id, void *controller );
-
-
 void handle_features_reply(
   uint64_t datapath_id,
   uint32_t transaction_id,

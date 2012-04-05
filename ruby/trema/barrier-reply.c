@@ -18,7 +18,7 @@
  */
 
 
-#include "ruby.h"
+#include "trema-ruby-utils.h"
 #include "trema.h"
 
 
@@ -82,7 +82,7 @@ Init_barrier_reply() {
 void
 handle_barrier_reply( uint64_t datapath_id, uint32_t transaction_id, void *user_data ) {
   VALUE controller = ( VALUE ) user_data;
-  if ( !rb_respond_to( controller, rb_intern( "barrier_reply" ) ) ) {
+  if ( !RB_RESPOND_TO( controller, rb_intern( "barrier_reply" ) ) ) {
     return;
   }
 

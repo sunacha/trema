@@ -18,7 +18,7 @@
  */
 
 
-#include "ruby.h"
+#include "trema-ruby-utils.h"
 #include "trema.h"
 
 
@@ -157,7 +157,7 @@ handle_queue_get_config_reply(
   void *user_data
 ) {
   VALUE controller = ( VALUE ) user_data;
-  if ( !rb_respond_to( controller, rb_intern( "queue_get_config_reply" ) ) ) {
+  if ( !RB_RESPOND_TO( controller, rb_intern( "queue_get_config_reply" ) ) ) {
     return;
   }
 

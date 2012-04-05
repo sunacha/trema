@@ -1,5 +1,5 @@
 /*
- * Ruby wrapper class of OpenFlow packet_in message.
+ * Private functions that are only called from [chibach]/src/lib.
  *
  * Author: Yasuhito Takamiya <yasuhito@gmail.com>
  *
@@ -20,22 +20,28 @@
  */
 
 
-#ifndef PACKET_IN_H
-#define PACKET_IN_H
+#ifndef CHIBACH_PRIVATE_H
+#define CHIBACH_PRIVATE_H
 
 
-#include "ruby.h"
-#include "trema.h"
+#include "bool.h"
 
 
-extern VALUE cPacketIn;
+void set_chibach_home( void );
+const char *get_chibach_home( void );
+void unset_chibach_home( void );
+
+void set_chibach_tmp( void );
+const char *get_chibach_tmp( void );
+void unset_chibach_tmp( void );
+
+const char *get_chibach_name( void );
+
+const char *_get_chibach_home( void );
+const char *_get_chibach_tmp( void );
 
 
-void Init_packet_in( void );
-void handle_packet_in( uint64_t datapath_id, packet_in message );
-
-
-#endif // PACKET_IN_H
+#endif // CHIBACH_PRIVATE_H
 
 
 /*

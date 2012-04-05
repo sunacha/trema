@@ -1,8 +1,6 @@
 /*
  * Ruby wrapper class of OpenFlow hello message.
  *
- * Author: Yasuhito Takamiya <yasuhito@gmail.com>
- *
  * Copyright (C) 2008-2012 NEC Corporation
  *
  * This program is free software; you can redistribute it and/or modify
@@ -24,7 +22,7 @@
 #define HELLO_H
 
 
-#include "ruby.h"
+#include "trema-ruby-utils.h"
 
 
 extern VALUE cHello;

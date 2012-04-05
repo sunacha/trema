@@ -18,7 +18,7 @@
  */
 
 
-#include "ruby.h"
+#include "trema-ruby-utils.h"
 #include "trema.h"
 #include "action-common.h"
 
@@ -92,10 +92,10 @@ port_mod_init( int argc, VALUE *argv, VALUE self ) {
 
     if ( ( hw_addr = rb_hash_aref( options, ID2SYM( rb_intern( "hw_addr" ) ) ) ) != Qnil ) {
       mac = hw_addr;
-      if ( rb_obj_is_kind_of( hw_addr, rb_cString ) ||
-        rb_obj_is_kind_of( hw_addr, rb_cInteger ) ) {
+      if ( RB_OBJ_IS_KIND_OF( hw_addr, rb_cString ) ||
+        RB_OBJ_IS_KIND_OF( hw_addr, rb_cInteger ) ) {
         mac = rb_funcall( rb_eval_string( "Trema::Mac" ), rb_intern( "new" ), 1, hw_addr );
-      } else if ( !rb_obj_is_instance_of( hw_addr, rb_eval_string( "Trema::Mac" ) ) ) {
+      } else if ( !RB_OBJ_IS_INSTANCE_OF( hw_addr, rb_eval_string( "Trema::Mac" ) ) ) {
         rb_raise( rb_eArgError, "hw_addr must be a string or an integer or Mac object" );
       }
       ptr = ( uint8_t* ) dl_addr_short( mac, haddr );
@@ -210,6 +210,7 @@ Init_port_mod() {
   rb_define_alloc_func( cPortMod, port_mod_alloc );
   rb_define_method( cPortMod, "initialize", port_mod_init, -1 );
   rb_define_method( cPortMod, "transaction_id", port_mod_transaction_id, 0 );
+  rb_alias( cPortMod, rb_intern( "xid" ), rb_intern( "transaction_id" ) );
   rb_define_method( cPortMod, "port_no", port_mod_port_no, 0 );
   rb_define_method( cPortMod, "hw_addr", port_mod_hw_addr, 0 );
   rb_define_method( cPortMod, "config", port_mod_config, 0 );

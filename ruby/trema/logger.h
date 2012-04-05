@@ -24,8 +24,7 @@
 #define LOGGER_H
 
 
-#include "ruby.h"
-#include "trema.h"
+#include "trema-ruby-utils.h"
 
 
 extern VALUE mLogger;
