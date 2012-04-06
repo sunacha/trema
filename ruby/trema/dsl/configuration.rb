@@ -43,6 +43,16 @@ module Trema
       attr_accessor :port
 
       #
+      # set/get the port number for switch manager to listen to
+      #
+      # @example
+      #   config.port = 5432
+      #
+      # @return [Number]
+      #
+      attr_accessor :unix_path
+
+      #
       # use tremashark?
       #
       # @example
