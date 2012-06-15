@@ -43,24 +43,14 @@ module Trema
       attr_accessor :port
 
       #
-      # set/get the port number for switch manager to listen to
+      # set/get the unix path for switch manager to listen to
       #
       # @example
-      #   config.port = 5432
+      #   config.unix_path = /foo/bar.sock
       #
-      # @return [Number]
+      # @return [String]
       #
       attr_accessor :unix_path
-
-      #
-      # use tremashark?
-      #
-      # @example
-      #   config.tremashark = true
-      #
-      # @return [Boolean]
-      #
-      attr_accessor :tremashark
 
       #
       # the hash of {App}
@@ -117,7 +107,6 @@ module Trema
       #
       def initialize
         @port = 6633
-        @tremashark = false
         @apps = Trema::App.clear
         @hosts = Trema::Host.clear
         @links = Trema::Link.clear
