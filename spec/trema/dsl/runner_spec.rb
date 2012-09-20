@@ -1,6 +1,4 @@
 #
-# Author: Yasuhito Takamiya <yasuhito@gmail.com>
-#
 # Copyright (C) 2008-2012 NEC Corporation
 #
 # This program is free software; you can redistribute it and/or modify
@@ -48,7 +46,8 @@ module Trema
             :links => {},
             :hosts => {},
             :switches => {},
-            :apps => {}
+            :apps => {},
+            :netnss => {}
           )
 
           Runner.new( context ).run
@@ -70,6 +69,7 @@ module Trema
             :apps => {},
             :port => 6633,
             :unix_path => nil
+            :netnss => {}
           )
 
           Runner.new( context ).run
@@ -100,6 +100,7 @@ module Trema
             :apps => {},
             :port => 6633,
             :unix_path => nil
+            :netnss => {}
           )
 
           Runner.new( context ).run
@@ -143,6 +144,7 @@ module Trema
             :apps => {},
             :port => 6633,
             :unix_path => nil
+            :netnss => {}
           )
 
           Runner.new( context ).run
@@ -170,6 +172,7 @@ module Trema
             :apps => {},
             :port => 6633,
             :unix_path => nil
+            :netnss => {}
           )
 
           Runner.new( context ).run
@@ -199,6 +202,7 @@ module Trema
             :links => {},
             :hosts => {},
             :switches => {},
+            :netnss => {},
             :apps => apps
           )
 
@@ -229,6 +233,7 @@ module Trema
             :links => {},
             :hosts => {},
             :switches => {},
+            :netnss => {},
             :apps => apps
           )
 
