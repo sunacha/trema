@@ -23,6 +23,7 @@
 #include <inttypes.h>
 #include "ruby.h"
 #include "buffer.h"
+#include "openflow_message.h"
 
 
 #if HAVE_RUBY_VERSION_H == 1
