@@ -11,8 +11,10 @@ Gem::Specification.new do | s |
   s.description = %q{Trema is a full-stack, easy-to-use framework for developing OpenFlow controllers in Ruby and C}
   s.license = "GPL2"
 
-  s.files = `git ls-files`.split( "\n" )
-  s.test_files = `git ls-files -- {spec,features}/*`.split( "\n" )
+  ignores = File.readlines(".gitignore").grep(/\S+/).map {|s| s.chomp }
+  s.files = Dir.glob("**/*", File::FNM_DOTMATCH).reject {|f| File.directory?(f) || f =‾ /^\.git\// || f =‾ /^\.gitignore$/ || ignores.any? {|i| File.fnmatch(i, f) } }
+  s.test_files = s.files.grep(/^(spec|features)\//)
+
   s.bindir = "."
   s.executables = [ "trema", "trema-config" ]
   s.require_path = "ruby"
