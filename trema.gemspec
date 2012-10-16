@@ -12,7 +12,7 @@ Gem::Specification.new do | s |
   s.license = "GPL2"
 
   ignores = File.readlines(".gitignore").grep(/\S+/).map {|s| s.chomp }
-  s.files = Dir.glob("**/*", File::FNM_DOTMATCH).reject {|f| File.directory?(f) || f =‾ /^\.git\// || f =‾ /^\.gitignore$/ || ignores.any? {|i| File.fnmatch(i, f) } }
+  s.files = Dir.glob("**/*", File::FNM_DOTMATCH).reject {|f| File.directory?(f) || f =~ /^\.git\// || f =~ /^\.gitignore$/ || ignores.any? {|i| File.fnmatch(i, f) } }
   s.test_files = s.files.grep(/^(spec|features)\//)
 
   s.bindir = "."
