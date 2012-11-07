@@ -97,7 +97,6 @@ Init_trema() {
   Init_event_connection();
   Init_event_timer();
   Init_event_handler();
-  Init_controller();
   Init_features_reply();
   Init_features_request();
   Init_flow_mod();
