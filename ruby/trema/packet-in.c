@@ -556,6 +556,23 @@ packet_in_ipv4_daddr( VALUE self ) {
 
 
 /*
+ * A String that holds the IPv4 payload.
+ *
+ * @return [String] the value of data.
+ */
+static VALUE
+packet_in_ipv4_payload( VALUE self ) {
+  packet_info *cpacket = get_packet_in_info( self );
+  if ( ( get_packet_in_info( self )->format & NW_IPV4 ) ) {
+    return rb_str_new( cpacket->l3_payload, ( long ) cpacket->l3_payload_length );
+  }
+  else {
+    return Qnil;
+  }
+}
+
+
+/*
  * Is it an ICMPv4 packet?
  *
  * @return [Boolean] whether the packet is an ICMPv4 packet or not.
@@ -990,7 +1007,13 @@ packet_in_is_udp( VALUE self ) {
 static VALUE
 packet_in_udp_payload( VALUE self ) {
   packet_info *cpacket = get_packet_in_info( self );
-  return rb_str_new( cpacket->l4_payload, ( long ) cpacket->l4_payload_length );
+
+  if ( ( get_packet_in_info( self )->format & TP_UDP ) ) {
+    return rb_str_new( cpacket->l4_payload, ( long ) cpacket->l4_payload_length );
+  }
+  else {
+    return Qnil;
+  }
 }
 
 
@@ -1091,6 +1114,7 @@ Init_packet_in() {
   rb_define_method( cPacketIn, "ipv4_checksum", packet_in_ipv4_checksum, 0 );
   rb_define_method( cPacketIn, "ipv4_saddr", packet_in_ipv4_saddr, 0 );
   rb_define_method( cPacketIn, "ipv4_daddr", packet_in_ipv4_daddr, 0 );
+  rb_define_method( cPacketIn, "ipv4_payload", packet_in_ipv4_payload, 0 );
 
   rb_define_method( cPacketIn, "icmpv4_type", packet_in_icmpv4_type, 0 );
   rb_define_method( cPacketIn, "icmpv4_code", packet_in_icmpv4_code, 0 );
