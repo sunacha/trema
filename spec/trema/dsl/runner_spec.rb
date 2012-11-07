@@ -68,7 +68,7 @@ module Trema
             :switches => {},
             :apps => {},
             :port => 6633,
-            :unix_path => nil
+            :unix_path => nil,
             :netnss => {}
           )
 
@@ -99,7 +99,7 @@ module Trema
             :switches => {},
             :apps => {},
             :port => 6633,
-            :unix_path => nil
+            :unix_path => nil,
             :netnss => {}
           )
 
@@ -143,7 +143,7 @@ module Trema
             :switches => {},
             :apps => {},
             :port => 6633,
-            :unix_path => nil
+            :unix_path => nil,
             :netnss => {}
           )
 
@@ -171,7 +171,7 @@ module Trema
             :switches => { "switch0" => switch0, "switch1" => switch1, "switch 2" => switch2 },
             :apps => {},
             :port => 6633,
-            :unix_path => nil
+            :unix_path => nil,
             :netnss => {}
           )
 
