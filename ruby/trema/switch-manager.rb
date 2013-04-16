@@ -57,6 +57,18 @@ module Trema
 
 
     #
+    # Add a prefix to the switch manager command, with a trailing
+    # space if seperation is required
+    #
+    # @example
+    #   switch_manager.command_prefix = "valgrind -q --tool=memcheck --leak-check=yes --trace-children=yes --log-socket=127.0.0.1:12345 "
+    #
+    # @return [String]
+    #
+    attr_accessor :command_prefix
+
+
+    #
     # Creates a switch manager controller
     #
     # @example
@@ -65,10 +77,12 @@ module Trema
     #
     # @return [SwitchManager]
     #
-    def initialize rule, port = nil
+    def initialize rule, port = nil, unix_path = nil
       @rule = rule
       @port = port
+      @unix_path = unix_path
       @no_flow_cleanup = false
+      @command_prefix = ""
       SwitchManager.add self
     end
 
@@ -86,19 +100,20 @@ module Trema
     end
 
 
+    def command
+      "#{ command_prefix }#{ Executables.switch_manager } #{ options.join " " } -- #{ switch_options.join " " }"
+    end
+
+
     ############################################################################
     private
     ############################################################################
 
 
-    def command
-      "#{ Executables.switch_manager } #{ options.join " " } -- #{ switch_options.join " " }"
-    end
-
-
     def options
       opts = [ "--daemonize" ]
-      opts << "--port=#{ @port }" if @port
+      opts << "--port=#{ @port }" if @port and @unix_path == nil
+      opts << "--unix=#{ @unix_path }" if @unix_path
       opts
     end
 
