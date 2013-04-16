@@ -42,8 +42,9 @@ handle_timer_event( void *self ) {
  * command.
  */
 static VALUE
-controller_run( VALUE self ) {
-  setenv( "TREMA_HOME", RSTRING_PTR( rb_funcall( mTrema, rb_intern( "home" ), 0 ) ), 1 );
+controller_init_trema( VALUE self ) {
+  VALUE home = rb_funcall( mTrema, rb_intern( "home" ), 0 );
+  setenv( "TREMA_HOME", RSTRING_PTR( home ), 1 );
 
   VALUE name = rb_funcall( self, rb_intern( "name" ), 0 );
   rb_gv_set( "$PROGRAM_NAME", name );
@@ -65,6 +66,40 @@ controller_run( VALUE self ) {
   add_timer_event_callback( &interval, handle_timer_event, ( void * ) self );
 
   rb_funcall( self, rb_intern( "install_handlers" ), 1, self );
+
+  return self;
+}
+
+
+static VALUE
+controller_run_immediate( VALUE self ) {
+  if ( rb_respond_to( self, rb_intern( "start" ) ) ) {
+    rb_funcall( self, rb_intern( "start" ), 0 );
+  }
+
+  rb_funcall( self, rb_intern( "start_trema_immediate" ), 0 );
+
+  return self;
+}
+
+
+static VALUE
+controller_stop_immediate( VALUE self ) {
+  start_trema_down();
+
+  return self;
+}
+
+
+/*
+ * Starts this controller. Usually you do not need to invoke
+ * explicitly, because this is called implicitly by "trema run"
+ * command.
+ */
+static VALUE
+controller_run( VALUE self ) {
+  rb_funcall( self, rb_intern( "init_trema" ), 0 );
+
   if ( rb_respond_to( self, rb_intern( "start" ) ) ) {
     rb_funcall( self, rb_intern( "start" ), 0 );
   }
@@ -111,6 +146,19 @@ controller_start_trema( VALUE self ) {
   return self;
 }
 
+static VALUE
+controller_start_trema_immediate( VALUE self ) {
+  struct itimerspec interval;
+  interval.it_interval.tv_sec = 0;
+  interval.it_interval.tv_nsec = 1000000;
+  interval.it_value.tv_sec = 0;
+  interval.it_value.tv_nsec = 0;
+  add_timer_event_callback( &interval, thread_pass, NULL );
+
+  start_trema_up();
+
+  return self;
+}
 
 /********************************************************************************
  * Init Controller module.
@@ -123,7 +171,15 @@ Init_controller( void ) {
 
   rb_define_method( cController, "run!", controller_run, 0 );
   rb_define_method( cController, "shutdown!", controller_shutdown, 0 );
+
+  rb_define_method( cController, "run_immediate!", controller_run_immediate, 0 );
+  rb_define_method( cController, "stop_immediate!", controller_stop_immediate, 0 );
+
+  rb_define_method( cController, "init_trema", controller_init_trema, 0 );
+
+  // Private
   rb_define_private_method( cController, "start_trema", controller_start_trema, 0 );
+  rb_define_private_method( cController, "start_trema_immediate", controller_start_trema_immediate, 0 );
 
   rb_require( "trema/controller" );
 }
