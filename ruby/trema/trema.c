@@ -22,6 +22,9 @@
 #include "logger.h"
 #include "message-handler.h"
 #include "actions.h"
+#include "event_connection.h"
+#include "event_handler.h"
+#include "event_timer.h"
 #include "instructions.h"
 #include "match.h"
 #include "message-const.h"
@@ -43,6 +46,9 @@ Init_trema( void ) {
   Init_logger();
   Init_message_const();
   Init_actions();
+  Init_event_connection();
+  Init_event_timer();
+  Init_event_handler();
   Init_instructions();
   Init_messages();
   Init_message_handler();
