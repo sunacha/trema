@@ -42,6 +42,16 @@ module Trema
       attr_accessor :port
 
       #
+      # set/get the unix path for switch manager to listen to
+      #
+      # @example
+      #   config.unix_path = /foo/bar.sock
+      #
+      # @return [String]
+      #
+      attr_accessor :unix_path
+
+      #
       # the hash of {App}
       #
       # @example
