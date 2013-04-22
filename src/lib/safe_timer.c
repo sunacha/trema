@@ -92,9 +92,9 @@ on_timer( timer_callback_info *callback, struct timespec *now ) {
   assert( callback != NULL );
   assert( callback->function != NULL );
 
-  debug( "Executing a timer event ( function = %p, expires_at = %u.%09u, interval = %u.%09u, user_data = %p ).",
-         callback->function, callback->expires_at.tv_sec, callback->expires_at.tv_nsec,
-         callback->interval.tv_sec, callback->interval.tv_nsec, callback->user_data );
+  /* debug( "Executing a timer event ( function = %p, expires_at = %u.%09u, interval = %u.%09u, user_data = %p ).", */
+  /*        callback->function, callback->expires_at.tv_sec, callback->expires_at.tv_nsec, */
+  /*        callback->interval.tv_sec, callback->interval.tv_nsec, callback->user_data ); */
 
   if ( VALID_TIMESPEC( &callback->expires_at ) ) {
     callback->function( callback->user_data );
@@ -110,7 +110,7 @@ on_timer( timer_callback_info *callback, struct timespec *now ) {
       callback->expires_at.tv_nsec = 0;
       callback->function = NULL;
     }
-    debug( "Set expires_at value to %u.%09u.", callback->expires_at.tv_sec, callback->expires_at.tv_nsec );
+    /* debug( "Set expires_at value to %u.%09u.", callback->expires_at.tv_sec, callback->expires_at.tv_nsec ); */
   }
   else {
     error( "Invalid expires_at value." );
@@ -143,7 +143,7 @@ _execute_timer_events( int *next_timeout_usec ) {
   timer_read_end();
   assert( timer != NULL );
 
-  debug( "Executing timer events ( timer_callbacks = %p ).", timer->timer_callbacks );
+  /* debug( "Executing timer events ( timer_callbacks = %p ).", timer->timer_callbacks ); */
 
   struct timespec now = { 0, 0 };
   assert( clock_gettime( CLOCK_MONOTONIC, &now ) == 0 );
