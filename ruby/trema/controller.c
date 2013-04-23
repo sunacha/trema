@@ -111,6 +111,21 @@ controller_run( VALUE self ) {
 
 
 /*
+ * Starts this controller without calling init_trema.
+ */
+static VALUE
+controller_run_no_init( VALUE self ) {
+  if ( rb_respond_to( self, rb_intern( "start" ) ) ) {
+    rb_funcall( self, rb_intern( "start" ), 0 );
+  }
+
+  rb_funcall( self, rb_intern( "start_trema" ), 0 );
+
+  return self;
+}
+
+
+/*
  * @overload shutdown!
  *   In the context of trema framework stops this controller and its applications.
  */
@@ -172,6 +187,7 @@ Init_controller( void ) {
   rb_define_method( cController, "run!", controller_run, 0 );
   rb_define_method( cController, "shutdown!", controller_shutdown, 0 );
 
+  rb_define_method( cController, "run_no_init!", controller_run_no_init, 0 );
   rb_define_method( cController, "run_immediate!", controller_run_immediate, 0 );
   rb_define_method( cController, "stop_immediate!", controller_stop_immediate, 0 );
 
