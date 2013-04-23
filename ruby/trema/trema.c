@@ -31,6 +31,7 @@
 #include "messages.h"
 #include "message-handler.h"
 #include "message-helper.h"
+#include "tasks.h"
 
 
 VALUE mTrema;
