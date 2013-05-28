@@ -23,8 +23,8 @@ require "paper-house/executable-task"
 require "paper-house/ruby-library-task"
 require "paper-house/static-library-task"
 require "rake/clean"
-require "rspec/core"
-require "rspec/core/rake_task"
+# require "rspec/core"
+# require "rspec/core/rake_task"
 require "trema/dsl/parser"
 require "trema/executables"
 require "trema/path"
@@ -316,36 +316,36 @@ end
 # Tests
 ################################################################################
 
-task :spec => :libruby
-RSpec::Core::RakeTask.new do | task |
-  task.verbose = $trace
-  task.pattern = FileList[ "spec/trema_spec.rb", "spec/trema/messages/hello_spec.rb" ]
-  task.rspec_opts = "--format documentation --color"
-end
+# task :spec => :libruby
+# RSpec::Core::RakeTask.new do | task |
+#   task.verbose = $trace
+#   task.pattern = FileList[ "spec/trema_spec.rb", "spec/trema/messages/hello_spec.rb" ]
+#   task.rspec_opts = "--format documentation --color"
+# end
 
 
-require "cucumber/rake/task"
-task :features => :default
-Cucumber::Rake::Task.new( :features ) do | t |
-  t.cucumber_opts = "features --tags ~@wip"
-end
+# require "cucumber/rake/task"
+# task :features => :default
+# Cucumber::Rake::Task.new( :features ) do | t |
+#   t.cucumber_opts = "features --tags ~@wip"
+# end
 
 
 ################################################################################
 # YARD
 ################################################################################
 
-begin
-  require "yard"
+# begin
+#   require "yard"
 
-  YARD::Rake::YardocTask.new do | t |
-    t.files = [ "ruby/trema/**/*.c", "ruby/trema/**/*.rb" ]
-    t.options = [ "--no-private" ]
-    t.options << "--debug" << "--verbose" if $trace
-  end
-rescue LoadError
-  $stderr.puts $!.to_s
-end
+#   YARD::Rake::YardocTask.new do | t |
+#     t.files = [ "ruby/trema/**/*.c", "ruby/trema/**/*.rb" ]
+#     t.options = [ "--no-private" ]
+#     t.options << "--debug" << "--verbose" if $trace
+#   end
+# rescue LoadError
+#   $stderr.puts $!.to_s
+# end
 
 
 ## Local variables:
