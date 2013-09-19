@@ -270,7 +270,8 @@ def switch_tests
       "#{ Trema.src_unittests }/switch/switch/group-helper-test.c",
       "#{ Trema.src_unittests }/switch/switch/mocks.c",
       "#{ Trema.src_trema_switch }/group-helper.c",
-      "#{ Trema.src_trema_switch }/action*.c"
+      "#{ Trema.src_trema_switch }/action*.c",
+      "#{ Trema.src_trema_switch }/oxm*.c"
     ]
   }
 end
@@ -319,7 +320,7 @@ end
 task :spec => :libruby
 RSpec::Core::RakeTask.new do | task |
   task.verbose = $trace
-  task.pattern = FileList[ "spec/trema_spec.rb" ]
+  task.pattern = FileList[ "spec/trema_spec.rb", "spec/trema/messages/hello_spec.rb" ]
   task.rspec_opts = "--format documentation --color"
 end
 

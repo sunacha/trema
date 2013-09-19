@@ -298,7 +298,7 @@ get_group_stats( const uint32_t group_id, group_stats **stats, uint32_t *n_group
     group_entry *entry = lookup_group_entry( group_id );
     if ( entry == NULL ) {
       unlock_pipeline();
-      ret = ERROR_OFDPE_BAD_REQUEST_BAD_TABLE_ID;
+      return ERROR_OFDPE_BAD_REQUEST_BAD_TABLE_ID;
     }
     append_to_tail( &groups, entry );
     ( *n_groups )++;
@@ -362,7 +362,7 @@ get_group_stats( const uint32_t group_id, group_stats **stats, uint32_t *n_group
 
 
 OFDPE
-get_group_desc_stats( group_desc_stats **stats, uint16_t *n_groups ) {
+get_group_desc( group_desc **stats, uint16_t *n_groups ) {
   assert( table != NULL );
   assert( n_groups != NULL );
 
@@ -378,14 +378,14 @@ get_group_desc_stats( group_desc_stats **stats, uint16_t *n_groups ) {
     ( *n_groups )++;
   }
 
-  size_t length = sizeof( group_desc_stats ) * ( *n_groups );
+  size_t length = sizeof( group_desc ) * ( *n_groups );
   *stats = NULL;
   if ( *n_groups > 0 ) {
     *stats = xmalloc( length );
     memset( *stats, 0, length );
   }
 
-  group_desc_stats *stat = *stats;
+  group_desc *stat = *stats;
   for ( list_element *element = table->entries; element != NULL; element = element->next ) {
     if ( element->data == NULL ) {
       continue;
