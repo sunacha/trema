@@ -19,12 +19,10 @@
 $LOAD_PATH.unshift File.expand_path( File.join File.dirname( __FILE__ ), "ruby" )
 
 
-require "paper-house/executable-task"
-require "paper-house/c-extension-task"
-require "paper-house/static-library-task"
+require "paper_house"
 require "rake/clean"
-# require "rspec/core"
-# require "rspec/core/rake_task"
+require "rspec/core"
+require "rspec/core/rake_task"
 require "trema/dsl/parser"
 require "trema/executables"
 require "trema/path"
@@ -59,8 +57,9 @@ task :default => [
   :switch_daemon,
   :trema_switch,
   :packetin_filter,
+  :tremashark,
   :examples,
-  "vendor:phost"
+  "vendor:phost",
 ]
 
 
@@ -211,6 +210,61 @@ PaperHouse::ExecutableTask.new :packetin_filter do | task |
     "rt",
     "dl",
   ]
+end
+
+
+desc "Build Tremashark."
+
+task :tremashark => [
+  'tremashark:tremashark',
+  'tremashark:syslog_relay',
+  'tremashark:stdin_relay',
+  'tremashark:packet_capture',
+]
+
+tremashark_sources = {
+  'tremashark:tremashark' => [
+    'src/tremashark/queue.c',
+    'src/tremashark/pcap_queue.c',
+    'src/tremashark/tremashark.c',
+  ],
+  'tremashark:syslog_relay' => [
+    'src/tremashark/syslog_relay.c',
+  ],
+  'tremashark:stdin_relay' => [
+    'src/tremashark/stdin_relay.c',
+  ],
+  'tremashark:packet_capture' => [
+    'src/tremashark/queue.c',
+    'src/tremashark/pcap_queue.c',
+    'src/tremashark/packet_capture.c',
+  ],
+}
+
+Rake::Task[ :tremashark ].prerequisites.each do | utility |
+  begin
+    Rake::Task[ utility ]
+  rescue
+    desc "Build #{ utility }."
+    task utility => :libtrema
+
+    PaperHouse::ExecutableTask.new utility do | task |
+      task.target_directory = File.dirname( Trema::Executables.tremashark )
+      task.executable_name = utility.split(':')[1]
+      task.sources = tremashark_sources[utility]
+      task.includes = Trema.include
+      task.cflags = CFLAGS
+      task.ldflags = "-L#{ Trema.lib }"
+      task.library_dependencies = [
+        "trema",
+        "sqlite3",
+        "pthread",
+        "rt",
+        "dl",
+        "pcap",
+      ]
+    end
+  end
 end
 
 
@@ -411,36 +465,36 @@ end
 # Tests
 ################################################################################
 
-# task :spec => :libruby
-# RSpec::Core::RakeTask.new do | task |
-#   task.verbose = $trace
-#   task.pattern = FileList[ "spec/trema_spec.rb", "spec/trema/messages/hello_spec.rb" ]
-#   task.rspec_opts = "--format documentation --color"
-# end
+task :spec => :libruby
+RSpec::Core::RakeTask.new do | task |
+  task.verbose = $trace
+  task.pattern = FileList[ "spec/trema_spec.rb", "spec/trema/messages/hello_spec.rb" ]
+  task.rspec_opts = "--format documentation --color"
+end
 
 
-# require "cucumber/rake/task"
-# task :features => :default
-# Cucumber::Rake::Task.new( :features ) do | t |
-#   t.cucumber_opts = "features --tags ~@wip"
-# end
+require "cucumber/rake/task"
+task :features => :default
+Cucumber::Rake::Task.new( :features ) do | t |
+  t.cucumber_opts = "features --tags ~@wip"
+end
 
 
 ################################################################################
 # YARD
 ################################################################################
 
-# begin
-#   require "yard"
+begin
+  require "yard"
 
-#   YARD::Rake::YardocTask.new do | t |
-#     t.files = [ "ruby/trema/**/*.c", "ruby/trema/**/*.rb" ]
-#     t.options = [ "--no-private" ]
-#     t.options << "--debug" << "--verbose" if $trace
-#   end
-# rescue LoadError
-#   $stderr.puts $!.to_s
-# end
+  YARD::Rake::YardocTask.new do | t |
+    t.files = [ "ruby/trema/**/*.c", "ruby/trema/**/*.rb" ]
+    t.options = [ "--no-private" ]
+    t.options << "--debug" << "--verbose" if $trace
+  end
+rescue LoadError
+  $stderr.puts $!.to_s
+end
 
 
 ## Local variables:
