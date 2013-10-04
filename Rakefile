@@ -21,8 +21,8 @@ $LOAD_PATH.unshift File.expand_path( File.join File.dirname( __FILE__ ), "ruby" 
 
 require "paper_house"
 require "rake/clean"
-require "rspec/core"
-require "rspec/core/rake_task"
+#require "rspec/core"
+#require "rspec/core/rake_task"
 require "trema/dsl/parser"
 require "trema/executables"
 require "trema/path"
@@ -473,7 +473,7 @@ RSpec::Core::RakeTask.new do | task |
 end
 
 
-require "cucumber/rake/task"
+#require "cucumber/rake/task"
 task :features => :default
 Cucumber::Rake::Task.new( :features ) do | t |
   t.cucumber_opts = "features --tags ~@wip"
