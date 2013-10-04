@@ -465,19 +465,19 @@ end
 # Tests
 ################################################################################
 
-task :spec => :libruby
-RSpec::Core::RakeTask.new do | task |
-  task.verbose = $trace
-  task.pattern = FileList[ "spec/trema_spec.rb", "spec/trema/messages/hello_spec.rb" ]
-  task.rspec_opts = "--format documentation --color"
-end
-
-
-#require "cucumber/rake/task"
-task :features => :default
-Cucumber::Rake::Task.new( :features ) do | t |
-  t.cucumber_opts = "features --tags ~@wip"
-end
+#task :spec => :libruby
+#RSpec::Core::RakeTask.new do | task |
+#  task.verbose = $trace
+#  task.pattern = FileList[ "spec/trema_spec.rb", "spec/trema/messages/hello_spec.rb" ]
+#  task.rspec_opts = "--format documentation --color"
+#end
+#
+#
+##require "cucumber/rake/task"
+#task :features => :default
+#Cucumber::Rake::Task.new( :features ) do | t |
+#  t.cucumber_opts = "features --tags ~@wip"
+#end
 
 
 ################################################################################
